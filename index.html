@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Hitung Angsuran</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 30px; }
+    label { display: block; margin-top: 10px; }
+    input { padding: 6px; width: 200px; }
+    button { margin-top: 15px; padding: 8px 15px; }
+    .hasil { margin-top: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Form Perhitungan Angsuran</h2>
+  <form id="formAngsuran">
+    <label>
+      Sisa Outstanding Pokok (M):
+      <input type="number" id="M" step="any" required>
+    </label>
+
+    <label>
+      Suku Bunga (i) % per tahun:
+      <input type="number" id="i" step="any" required>
+    </label>
+
+    <label>
+      Sisa Jangka Waktu (t) bulan:
+      <input type="number" id="t" step="1" required>
+    </label>
+
+    <button type="submit">Hitung Angsuran</button>
+  </form>
+
+  <div class="hasil" id="hasil"></div>
+
+  <script>
+    document.getElementById('formAngsuran').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const M = parseFloat(document.getElementById('M').value);
+      const i = parseFloat(document.getElementById('i').value) / 100; // persen ke desimal
+      const t = parseInt(document.getElementById('t').value);
+
+      // i per bulan
+      const monthlyRate = i / 12;
+
+      // rumus A = M × [ (i/12) × (1 + i/12)^t ] / [ (1 + i/12)^t – 1 ]
+      const numerator = monthlyRate * Math.pow(1 + monthlyRate, t);
+      const denominator = Math.pow(1 + monthlyRate, t) - 1;
+
+      let A = 0;
+      if (denominator !== 0) {
+        A = M * (numerator / denominator);
+      }
+
+      document.getElementById('hasil').innerText = 
+        `Angsuran per bulan: Rp ${A.toFixed(2)}`;
+    });
+  </script>
+</body>
+</html>
